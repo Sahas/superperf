@@ -189,7 +189,7 @@ public class HttpSamplerTest {
 		String superPerfJson = FileUtils.readFileToString(new File("/Users/sahas.n/Downloads/Create-shipment-JMeter.json"), Charset.forName("UTF-8"));
 		JTestPlan jTestPlan = mapper.readValue(superPerfJson, JTestPlan.class);
 		JmxGenerator scriptGen = new JmxGenerator();
-		scriptGen.init("/Users/sahas.n/Downloads/apache-jmeter-5.0");
+		//scriptGen.init("/Users/sahas.n/Downloads/apache-jmeter-5.0");
 		scriptGen.generateJmxFromJson(jTestPlan, "/Users/sahas.n/Downloads/apache-jmeter-5.0", "influx.url", "jmeter");
 	}
 }

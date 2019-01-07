@@ -49,8 +49,8 @@ public class JmxGenerator {
 	
 	private static final Logger LOGGER = LogManager.getLogger(JmxGenerator.class);
 	
-	@Value("${jmeter.path}")
-	private String jmeterHome;
+//	@Value("${jmeter.path}")
+//	private String jmeterHome;
 	
 	@Value("${influx.url}")
 	private String influxUrl;
@@ -58,19 +58,19 @@ public class JmxGenerator {
 	@Value("${influx.measurement}")
 	private String measurement;
 	
-	@PostConstruct
-	public void init(String jmeterHome) throws IllegalStateException{
-		File home = new File(jmeterHome);
-		if(!home.exists()) {
-			throw new IllegalStateException("Jmeter Home Invalid");
-		}
-		File jmeterProperties = new File(home.getPath() + System.getProperty("file.separator") + "bin" + System.getProperty("file.separator") + "jmeter.properties");
-        //JMeter initialization (properties, log levels, locale, etc)
-        JMeterUtils.setJMeterHome(home.getPath());
-        JMeterUtils.loadJMeterProperties(jmeterProperties.getPath());
-        JMeterUtils.initLogging();// you can comment this line out to see extra log messages of i.e. DEBUG level
-        JMeterUtils.initLocale();
-	}
+//	@PostConstruct
+//	public void init(String jmeterHome) throws IllegalStateException{
+//		File home = new File(jmeterHome);
+//		if(!home.exists()) {
+//			throw new IllegalStateException("Jmeter Home Invalid");
+//		}
+//		File jmeterProperties = new File(home.getPath() + System.getProperty("file.separator") + "bin" + System.getProperty("file.separator") + "jmeter.properties");
+//        //JMeter initialization (properties, log levels, locale, etc)
+//        JMeterUtils.setJMeterHome(home.getPath());
+//        JMeterUtils.loadJMeterProperties(jmeterProperties.getPath());
+//        JMeterUtils.initLogging();// you can comment this line out to see extra log messages of i.e. DEBUG level
+//        JMeterUtils.initLocale();
+//	}
 	
 	public HashTree generateJmxFromJson(JTestPlan jTestPlan, String jmeterHome, String influxUrl, String measurement) throws FileNotFoundException, IOException {
 		
