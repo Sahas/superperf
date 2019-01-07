@@ -6,5 +6,6 @@ import lombok.Data;
 
 @Data
 public class JTestPlan {
+	private String name;
 	private List<JSampler> traffic;
 }

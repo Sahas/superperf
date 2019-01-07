@@ -6,10 +6,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.offbytwo.jenkins.JenkinsServer;
+import com.turvo.perf.core.LocalStorageService;
+import com.turvo.perf.core.ScpStorageService;
+import com.turvo.perf.core.StorageService;
 import com.turvo.perf.grafana.client.GrafanaConfiguration;
 
 import net.schmizz.sshj.SSHClient;
@@ -30,6 +34,7 @@ public class ApplicationConfig {
 	}
 	
 	
+	@ConditionalOnProperty(name="storage.mode", havingValue="remote")
 	@Bean
 	public SSHClient sshClient(@Value("${jenkins.host}") String host,@Value("${jenkins.host.user}") String user, @Value("${jenkins.host.pem.path}") String pemFilePath) throws IOException {
 		SSHClient client = new SSHClient();
@@ -48,5 +53,22 @@ public class ApplicationConfig {
 	public GrafanaConfiguration grafanaConfiguration(@Value("${grafana.host}") String host, @Value("${grafana.port}") int port, @Value("${grafana.user}") String user, @Value("${grafana.password}") String password,
 			@Value("${grafana.dashboard.uid}") String dashboardUid, @Value("${grafana.dashboard.datasource.db}") String datasource) {
 		return new GrafanaConfiguration().host(host).port(port).user(user).password(password).dashboardUid(dashboardUid).datasource(datasource);
+	}
+	
+	@Bean
+	public StorageService storageService(@Value("${storage.mode}") String storageMode, @Value("${storage.base.folder}") String baseFolder,
+			SSHClient sshClient) {
+		if(storageMode.equalsIgnoreCase("local")) {
+			LocalStorageService storageService = new LocalStorageService();
+			storageService.setBaseFolder(baseFolder);
+			return storageService;
+		}else {
+			ScpStorageService storageService = new ScpStorageService();
+			storageService.setBaseFolder(baseFolder);
+			storageService.setSshClient(sshClient);
+			return storageService;
+		}
+		
+		
 	}
 }

@@ -32,8 +32,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.turvo.perf.core.JmxGenerator;
 import com.turvo.perf.jmeter.domain.JTestPlan;
-import com.tuvo.perf.core.JmxGenerator;
 
 public class HttpSamplerTest {
 	
@@ -190,6 +190,6 @@ public class HttpSamplerTest {
 		JTestPlan jTestPlan = mapper.readValue(superPerfJson, JTestPlan.class);
 		JmxGenerator scriptGen = new JmxGenerator();
 		//scriptGen.init("/Users/sahas.n/Downloads/apache-jmeter-5.0");
-		scriptGen.generateJmxFromJson(jTestPlan, "/Users/sahas.n/Downloads/apache-jmeter-5.0", "influx.url", "jmeter");
+		//scriptGen.generateJmxFromJson(jTestPlan, "/Users/sahas.n/Downloads/apache-jmeter-5.0", "influx.url", "jmeter");
 	}
 }

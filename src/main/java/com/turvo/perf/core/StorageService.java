@@ -1,5 +1,6 @@
-package com.tuvo.perf.core;
+package com.turvo.perf.core;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -14,6 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 @FunctionalInterface
 public interface StorageService {
 
-	void saveFile(MultipartFile file, Map<String,String> pathDetails) throws IllegalStateException, IOException;
+	void saveFile(File file, Map<String,String> pathDetails) throws IllegalStateException, IOException;
 	 
 }

@@ -1,4 +1,4 @@
-package com.tuvo.perf.core;
+package com.turvo.perf.core;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -49,8 +49,8 @@ public class JmxGenerator {
 	
 	private static final Logger LOGGER = LogManager.getLogger(JmxGenerator.class);
 	
-//	@Value("${jmeter.path}")
-//	private String jmeterHome;
+	@Value("${jmeter.path}")
+	private String jmeterHome;
 	
 	@Value("${influx.url}")
 	private String influxUrl;
@@ -58,22 +58,22 @@ public class JmxGenerator {
 	@Value("${influx.measurement}")
 	private String measurement;
 	
-//	@PostConstruct
-//	public void init(String jmeterHome) throws IllegalStateException{
-//		File home = new File(jmeterHome);
-//		if(!home.exists()) {
-//			throw new IllegalStateException("Jmeter Home Invalid");
-//		}
-//		File jmeterProperties = new File(home.getPath() + System.getProperty("file.separator") + "bin" + System.getProperty("file.separator") + "jmeter.properties");
-//        //JMeter initialization (properties, log levels, locale, etc)
-//        JMeterUtils.setJMeterHome(home.getPath());
-//        JMeterUtils.loadJMeterProperties(jmeterProperties.getPath());
-//        JMeterUtils.initLogging();// you can comment this line out to see extra log messages of i.e. DEBUG level
-//        JMeterUtils.initLocale();
-//	}
+	@PostConstruct
+	public void init() throws IllegalStateException{
+		File home = new File(jmeterHome);
+		if(!home.exists()) {
+			throw new IllegalStateException("Jmeter Home Invalid");
+		}
+		File jmeterProperties = new File(home.getPath() + System.getProperty("file.separator") + "bin" + System.getProperty("file.separator") + "jmeter.properties");
+        //JMeter initialization (properties, log levels, locale, etc)
+        JMeterUtils.setJMeterHome(home.getPath());
+        JMeterUtils.loadJMeterProperties(jmeterProperties.getPath());
+        JMeterUtils.initLogging();// you can comment this line out to see extra log messages of i.e. DEBUG level
+        JMeterUtils.initLocale();
+	}
 	
-	public HashTree generateJmxFromJson(JTestPlan jTestPlan, String jmeterHome, String influxUrl, String measurement) throws FileNotFoundException, IOException {
-		
+//	public HashTree generateJmxFromJson(JTestPlan jTestPlan, String jmeterHome, String influxUrl, String measurement) throws FileNotFoundException, IOException {
+	public HashTree generateJmxFromJson(JTestPlan jTestPlan) {	
 		StandardJMeterEngine jmeter = new StandardJMeterEngine();
         HashTree testPlanTree = new HashTree();
         BackendListener influxListener = getBackendListenerElement(influxUrl,measurement);
@@ -148,8 +148,15 @@ public class JmxGenerator {
         HashTree threadGroupHashTree = testPlanTree.add(testPlan, threadGroup);
         threadGroupHashTree.add(samplers);
         threadGroupHashTree.add(influxListener);
-        SaveService.saveTree(testPlanTree, new FileOutputStream(jmeterHome + System.getProperty("file.separator")  + "example2.jmx"));
-        return null;
+        //SaveService.saveTree(testPlanTree, new FileOutputStream(jmeterHome + System.getProperty("file.separator")  + "example2.jmx"));
+        return testPlanTree;
+	}
+	
+	public void writeJmxIntoFile(HashTree testPlanTree, File file) throws FileNotFoundException, IOException {
+		
+		try( FileOutputStream output = new FileOutputStream(file)){
+			SaveService.saveTree(testPlanTree, output);
+		}
 	}
 	
 	public BackendListener getBackendListenerElement(String influxUrl, String measurement) {
