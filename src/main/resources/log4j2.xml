@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+
+        <RollingRandomAccessFile name="File" fileName="/var/log/turvoperf/turvoperf.log"
+                     filePattern="/var/log/turvoperf/turvoperf-%i.log.zip">
+
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS}{GMT+0} %level [%threadName] %c{-10} - %m%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="1024 MB"/>
+            </Policies>
+
+            <DefaultRolloverStrategy compressionLevel="9" max="16"/>
+        </RollingRandomAccessFile>
+
+        <Console name="STDOUT">
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS}{GMT+0} %level [%threadName] %c{-10} - %m%n"/>
+        </Console>
+    </Appenders>
+
+    <!-- Place any API service specific overrides here -->
+   <Loggers>
+        <!-- default logging settings across all projects: -->
+        <Logger name="com.turvo" level="info"/>
+        <!-- <Logger name="com.arl" level="info"/>
+        <Logger name="message" level="info"/> -->
+        <!--<Logger name="org.hibernate.SQL" level="debug"/>-->
+        <!-- <Logger name="org.directwebremoting.dwrp.DefaultConverterManager" level="error"/>
+        <Logger name="org.springframework.security.web.context.HttpSessionSecurityContextRepository" level="error"/>
+        <Logger name="org.springframework.security.web.context.HttpSessionSecurityContextRepository" level="error"/>
+        <Logger name="org.hibernate.engine.StatefulPersistenceContext.ProxyWarnLog" level="error" />
+        <Logger name="org.hibernate.SQL" level="info"/>
+        <Logger name="com.arl.saahas.api.mongo.service.MongoService" level="info"/>
+        <Logger name="com.arl" level="info"/>
+        <Logger name="com.turvo.auth" level="info"/>
+        <Logger name="com.turvo.ltl" level="info"/>
+        <Logger name="com.turvo" level="info"/>
+        <Logger name="org.springframework.security.saml" level="info"/>
+        <Logger name="org.opensaml" level="debug"/>
+        <Logger name="PROTOCOL_MESSAGE" level="debug"/>
+        <Logger name="com.arl.aspect.MongoIndexedAttributes" level="trace"/> -->
+         <Root level="warn">
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>
