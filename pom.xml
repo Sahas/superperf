@@ -132,6 +132,12 @@
 		    <artifactId>casutg</artifactId>
 		    <version>2.6</version>
 		</dependency>
+		
+		<dependency>
+		    <groupId>com.blazemeter</groupId>
+		    <artifactId>tst</artifactId>
+		    <version>2.5</version>
+		</dependency>
 
 	</dependencies>
 	
