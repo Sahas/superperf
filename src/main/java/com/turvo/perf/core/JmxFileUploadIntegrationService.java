@@ -98,8 +98,7 @@ public class JmxFileUploadIntegrationService {
 	}
 	
 	public List<JobDetails> getAllJobDetails(){
-		Query searchQuery = new Query();
-		return mongo.find(searchQuery, JobDetails.class);
+		return mongo.findAll(JobDetails.class);
 	}
 	
 	public JobDetails getJobDetails(String jobId){
