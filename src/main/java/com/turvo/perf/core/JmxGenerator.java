@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -40,12 +41,16 @@ import org.apache.jorphan.collections.HashTree;
 import org.apache.jorphan.collections.ListedHashTree;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.blazemeter.jmeter.control.VirtualUserController;
 import com.blazemeter.jmeter.threads.concurrency.ConcurrencyThreadGroup;
 import com.blazemeter.jmeter.threads.concurrency.ConcurrencyThreadGroupGui;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.turvo.perf.jmeter.domain.JSampler;
 import com.turvo.perf.jmeter.domain.JTestPlan;
 
@@ -102,18 +107,41 @@ public class JmxGenerator {
 	        	proxy.setProtocol(uri.getScheme());
 	        	proxy.setPort(uri.getPort());
 	        	proxy.setPath(uri.getPath());
+	        	//String body = jSampler.getBody()!= null ?jSampler.getBody().toString():"";
+	        	JsonNode payloadJson = jSampler.getBody();
+	        	ObjectMapper mapper = new ObjectMapper();
+//	        	if(StringUtils.isNotEmpty(body)) {
+//	        		payloadJson = mapper.readValue(body, new TypeReference<JsonNode>() {
+//					});
+//	        	}
+//	        	
 	        	// Issue with blazemeter - formadata vs Query Params
-	        	if(jSampler.getBody() != null && StringUtils.isNotEmpty(jSampler.getBody().toString())) {
-	        		proxy.setPostBodyRaw(true);
+	        	if(payloadJson !=null) {
 	        		if(StringUtils.isNotBlank(uri.getQuery())) {
 	        			proxy.setPath(uri.getPath() + "?" + uri.getRawQuery());
 	        		}
-	        		String body = jSampler.getBody().isArray()? jSampler.getBody().get(0).textValue() :jSampler.getBody().textValue(); 
-	        		HTTPArgument requestBody = new HTTPArgument("body", body);
-	        		requestBody.setAlwaysEncoded(false);
-	        		proxy.getArguments().addArgument(requestBody);
-	        	} else {
-	        		Arguments queryParamArgs = proxy.getArguments();
+	        	}
+	        	if(payloadJson !=null && payloadJson.isArray()) {
+	        			proxy.setPostBodyRaw(true);
+	        			String postBody =  payloadJson.get(0).textValue();
+	        			HTTPArgument requestBody = new HTTPArgument("body", postBody);
+	        			proxy.getArguments().addArgument(requestBody);
+	        		}
+	        		//requestBody.setAlwaysEncoded(false);
+	        	Arguments queryParamArgs = proxy.getArguments();
+	        	if(payloadJson == null || (payloadJson != null && !payloadJson.isArray())) {
+	        		if(payloadJson !=null && !payloadJson.isArray()) {
+	        			Map<String,String> payloadParamMap =  mapper.readValue(payloadJson.toString(), new TypeReference<Map<String,String>>() {
+						});
+	        			payloadParamMap.forEach((queryParam, queryValue) -> {
+	        				HTTPArgument queryParamArg = new HTTPArgument(queryParam,queryValue, "=");
+			        		queryParamArg.setAlwaysEncoded(true);
+			        		queryParamArg.setUseEquals(true);
+			        		queryParamArg.setProperty("name", queryParam);
+			        		queryParamArgs.addArgument(queryParamArg);
+	        			});
+	        			
+	        		}
 		        	
 		        	URLEncodedUtils.parse(uri, Charset.forName("UTF-8")).forEach( queryParam -> {
 		        		HTTPArgument queryParamArg = new HTTPArgument(queryParam.getName(), queryParam.getValue(), "=");
@@ -152,7 +180,7 @@ public class JmxGenerator {
 	        	//proxy.addTestElement(headerManager);
 	        	samplerTrees.add(samplerTree);
 	        	//samplers.add(proxy);
-			} catch (URISyntaxException e) {
+			} catch (URISyntaxException | IOException e) {
 				LOGGER.error("Incorrect URI syntax while generating script : " + e.getMessage());
 			}
         	

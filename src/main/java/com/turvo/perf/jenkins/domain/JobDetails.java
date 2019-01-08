@@ -19,7 +19,7 @@ public class JobDetails {
 	private String scriptName;
 	private String scriptLocation;
 	private String name;
-	private int numRuns;
+	private String numRuns;
 	private JTestPlan testPlan;
 	private List<BuildDetails> builds;
 	
@@ -47,4 +47,11 @@ public class JobDetails {
 		this.testPlan = testPlan;
 		return this;
 	}
+	
+	public JobDetails() {}
+	
+//	@PersistenceConstructor
+//	public JobDetails(String jobId, String scriptName,String name, String ) {
+//		
+//	}
 }

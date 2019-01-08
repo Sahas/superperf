@@ -19,6 +19,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
+import com.mongodb.DBObject;
 import com.turvo.perf.jenkins.domain.BuildDetails;
 import com.turvo.perf.jenkins.domain.JobDetails;
 import com.turvo.perf.jmeter.domain.JTestPlan;
@@ -72,6 +73,7 @@ public class JmxFileUploadIntegrationService {
 		jmxGenerator.writeJmxIntoFile(jmxHashTree, file);
 		LOGGER.info("Uploading " + storageFileName);
 		storageService.saveFile(file, pathDetails);
+		//file.delete();
 		return pathDetails;
 	}
 	
@@ -97,14 +99,14 @@ public class JmxFileUploadIntegrationService {
 		job.getBuilds().add(build); 
 	}
 	
-	public List<JobDetails> getAllJobDetails(){
-		return mongo.findAll(JobDetails.class);
+	public List<DBObject> getAllJobDetails(){
+		return mongo.findAll(DBObject.class, "jobs");
 	}
 	
-	public JobDetails getJobDetails(String jobId){
+	public DBObject getJobDetails(String jobId){
 		Query searchQuery = new Query();
 		searchQuery.addCriteria(new Criteria("jobId").is(jobId));
-		return mongo.findOne(searchQuery, JobDetails.class);
+		return mongo.findOne(searchQuery, DBObject.class, "jobs");
 	}
 	
 	public void storeJob(JobDetails jobDetails) {

@@ -200,7 +200,7 @@ public class GrafanaClient {
 		paramMap.put("pct", percentile);
 		paramMap.put("applicationName", applicationName);
 		paramMap.put("runName", runName);
-		String query = StringSubstitutor.replace(GrafanaQueries.GET_PCT_AVG_ALL_TXNS_RESPONSE_TIME_QUERY, paramMap);
+		String query = StringSubstitutor.replace(GrafanaQueries.GET_PCT_AVG_ALL_TXNS_RESPONSE_TIME_QUERY_WITHOUTAPP, paramMap);
 		Response<QueryResults> response = this.grafanaService.getResultForQuery(this.config.getDatasource(), query).execute();
 		return getValuesFromQueryResponse(response.body(), 0, "transaction");
 	}
@@ -212,7 +212,7 @@ public class GrafanaClient {
 		paramMap.put("applicationName", applicationName);
 		paramMap.put("runName", runName);
 		paramMap.put("txnName", txnName);
-		String query = StringSubstitutor.replace(GrafanaQueries.GET_PCT_AVG_TXN_RESPONSE_TIME_QUERY, paramMap);
+		String query = StringSubstitutor.replace(GrafanaQueries.GET_PCT_AVG_TXN_RESPONSE_TIME_QUERY_WITHOUTAPP, paramMap);
 		Response<QueryResults> response = this.grafanaService.getResultForQuery(this.config.getDatasource(), query).execute();
 		return getValuesFromQueryResponse(response.body(), 0, txnName);
 	}
@@ -223,7 +223,7 @@ public class GrafanaClient {
 		paramMap.put("applicationName", applicationName);
 		paramMap.put("runName", runName);
 		paramMap.put("txnName", txnName);
-		String query = StringSubstitutor.replace(GrafanaQueries.AVG_REQ_THROUGHPUT_OF_TXN_PER_MIN, paramMap);
+		String query = StringSubstitutor.replace(GrafanaQueries.AVG_REQ_THROUGHPUT_OF_TXN_PER_MIN_WITHOUTAPP, paramMap);
 		Response<QueryResults> response = this.grafanaService.getResultForQuery(this.config.getDatasource(), query).execute();
 		return getValuesFromQueryResponse(response.body(), 0, txnName);
 	}
@@ -245,7 +245,7 @@ public class GrafanaClient {
 		Map<String,String> paramMap = new HashMap<>();
 		paramMap.put("applicationName", applicationName);
 		paramMap.put("runName", runName);
-		String query = StringSubstitutor.replace(GrafanaQueries.AVG_REQ_THROUGHPUT_OF_ALL_TXNS_PER_MIN, paramMap);
+		String query = StringSubstitutor.replace(GrafanaQueries.AVG_REQ_THROUGHPUT_OF_ALL_TXNS_PER_MIN_WITHOUTAPP, paramMap);
 		Response<QueryResults> response = this.grafanaService.getResultForQuery(this.config.getDatasource(), query).execute();
 		return getValuesFromQueryResponse(response.body(), 0, "transaction");
 	}
@@ -256,7 +256,7 @@ public class GrafanaClient {
 		paramMap.put("applicationName", applicationName);
 		paramMap.put("runName", runName);
 		paramMap.put("scale", scale);
-		String query = StringSubstitutor.replace(GrafanaQueries.REQUEST_THROUGHPUT_TIMESERIES_DURING_RUN, paramMap);
+		String query = StringSubstitutor.replace(GrafanaQueries.REQUEST_THROUGHPUT_TIMESERIES_DURING_RUN_WITHOUT_APP, paramMap);
 		Response<QueryResults> response = this.grafanaService.getResultForQuery(this.config.getDatasource(), query).execute();
 		return getValuesFromQueryResponse(response.body(), 0, "transaction");
 	}
@@ -266,7 +266,7 @@ public class GrafanaClient {
 		Map<String,String> paramMap = new HashMap<>();
 		paramMap.put("applicationName", applicationName);
 		paramMap.put("runName", runName);
-		String query = StringSubstitutor.replace(GrafanaQueries.TOTAL_REQUESTS_DURING_RUN, paramMap);
+		String query = StringSubstitutor.replace(GrafanaQueries.TOTAL_REQUESTS_DURING_RUN_WITHOUTAPP, paramMap);
 		Response<QueryResults> response = this.grafanaService.getResultForQuery(this.config.getDatasource(), query).execute();
 		return getValuesFromQueryResponse(response.body(), 0, "requestsCount");
 	}
@@ -277,7 +277,7 @@ public class GrafanaClient {
 		paramMap.put("applicationName", applicationName);
 		paramMap.put("runName", runName);
 		paramMap.put("txnName", txnName);
-		String query = StringSubstitutor.replace(GrafanaQueries.TOTAL_REQUESTS_OF_TXN_DURING_RUN, paramMap);
+		String query = StringSubstitutor.replace(GrafanaQueries.TOTAL_REQUESTS_OF_TXN_DURING_RUN_WITHOUTAPP, paramMap);
 		Response<QueryResults> response = this.grafanaService.getResultForQuery(this.config.getDatasource(), query).execute();
 		return getValuesFromQueryResponse(response.body(), 0, txnName);
 	}
@@ -287,7 +287,7 @@ public class GrafanaClient {
 		Map<String,String> paramMap = new HashMap<>();
 		paramMap.put("applicationName", applicationName);
 		paramMap.put("runName", runName);
-		String query = StringSubstitutor.replace(GrafanaQueries.FAILED_REQUESTS_DURING_RUN, paramMap);
+		String query = StringSubstitutor.replace(GrafanaQueries.FAILED_REQUESTS_DURING_RUN_WITHOUTAPP, paramMap);
 		Response<QueryResults> response = this.grafanaService.getResultForQuery(this.config.getDatasource(), query).execute();
 		return getValuesFromQueryResponse(response.body(), 0, "failedCount");
 	}
@@ -298,7 +298,7 @@ public class GrafanaClient {
 		paramMap.put("applicationName", applicationName);
 		paramMap.put("runName", runName);
 		paramMap.put("txnName", txnName);
-		String query = StringSubstitutor.replace(GrafanaQueries.FAILED_REQUESTS_OF_TXN_DURING_RUN, paramMap);
+		String query = StringSubstitutor.replace(GrafanaQueries.FAILED_REQUESTS_OF_TXN_DURING_RUN_WITHOUTAPP, paramMap);
 		Response<QueryResults> response = this.grafanaService.getResultForQuery(this.config.getDatasource(), query).execute();
 		return getValuesFromQueryResponse(response.body(), 0, "failedCount");
 	}
@@ -309,7 +309,7 @@ public class GrafanaClient {
 		paramMap.put("applicationName", applicationName);
 		paramMap.put("runName", runName);
 		paramMap.put("scale", scale);
-		String query = StringSubstitutor.replace(GrafanaQueries.FAILED_REQUESTS_TIMESERIES_DURING_RUN, paramMap);
+		String query = StringSubstitutor.replace(GrafanaQueries.FAILED_REQUESTS_TIMESERIES_DURING_RUN_WITHOUTAPP, paramMap);
 		Response<QueryResults> response = this.grafanaService.getResultForQuery(this.config.getDatasource(), query).execute();
 		return getValuesFromQueryResponse(response.body(), 0, "transaction");
 	}
@@ -321,7 +321,7 @@ public class GrafanaClient {
 		paramMap.put("runName", runName);
 		paramMap.put("txnName", txnName);
 		paramMap.put("scale", scale);
-		String query = StringSubstitutor.replace(GrafanaQueries.FAILED_REQUESTS_TIMESERIES_OF_TXN_DURING_RUN, paramMap);
+		String query = StringSubstitutor.replace(GrafanaQueries.FAILED_REQUESTS_TIMESERIES_OF_TXN_DURING_RUN_WITHOUTAPP, paramMap);
 		Response<QueryResults> response = this.grafanaService.getResultForQuery(this.config.getDatasource(), query).execute();
 		return getValuesFromQueryResponse(response.body(), 0, txnName);
 	}
@@ -331,7 +331,7 @@ public class GrafanaClient {
 		Map<String,String> paramMap = new HashMap<>();
 		paramMap.put("applicationName", applicationName);
 		paramMap.put("runName", runName);
-		String query = StringSubstitutor.replace(GrafanaQueries.ERROR_INFO_ALL_TXNS_DURING_RUN, paramMap);
+		String query = StringSubstitutor.replace(GrafanaQueries.ERROR_INFO_ALL_TXNS_DURING_RUN_WITHOUTAPP, paramMap);
 		Response<QueryResults> response = this.grafanaService.getResultForQuery(this.config.getDatasource(), query).execute();
 		return getValuesFromQueryResponse(response.body(), 0, "transaction");
 	}
@@ -342,7 +342,7 @@ public class GrafanaClient {
 		paramMap.put("applicationName", applicationName);
 		paramMap.put("runName", runName);
 		paramMap.put("txnName", txnName);
-		String query = StringSubstitutor.replace(GrafanaQueries.ERROR_INFO_OF_TXN_DURING_RUN, paramMap);
+		String query = StringSubstitutor.replace(GrafanaQueries.ERROR_INFO_OF_TXN_DURING_RUN_WITHOUTAPP, paramMap);
 		Response<QueryResults> response = this.grafanaService.getResultForQuery(this.config.getDatasource(), query).execute();
 		return getValuesFromQueryResponse(response.body(), 0, txnName);
 	}

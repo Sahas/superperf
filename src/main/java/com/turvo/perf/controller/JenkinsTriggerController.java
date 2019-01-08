@@ -28,6 +28,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.DBObject;
 import com.turvo.perf.core.JmxFileUploadIntegrationService;
 import com.turvo.perf.jenkins.domain.JobDetails;
 import com.turvo.perf.jmeter.domain.JTestPlan;
@@ -80,12 +81,12 @@ public class JenkinsTriggerController {
 	}
 	
 	@GetMapping("/jobs")
-	public @ResponseBody List<JobDetails> getJobs(){
+	public @ResponseBody List<DBObject> getJobs(){
 		return integrationService.getAllJobDetails();
 	}
 	
 	@GetMapping("/jobs/{jobId}")
-	public @ResponseBody JobDetails getJobDetails(@PathVariable("jobId") String jobId){
+	public @ResponseBody DBObject getJobDetails(@PathVariable("jobId") String jobId){
 		return integrationService.getJobDetails(jobId);
 	}
 	
@@ -103,14 +104,14 @@ public class JenkinsTriggerController {
 		return job;
 	}
 	
-	@PostMapping("/jobs/{jobId}/trigger")
-	public @ResponseBody JobDetails triggerBuild(@RequestBody String buildParamsPayload) throws JsonParseException, JsonMappingException, IOException {
-		Map<String,String> triggerJobPayload = mapper.readValue(buildParamsPayload, new TypeReference<HashMap<String,String>>(){});
-		JobDetails jobDetails = integrationService.getJobDetails(triggerJobPayload.get("jobId"));
-		integrationService.triggerBuild(jobDetails, triggerJobPayload);
-		integrationService.storeJob(jobDetails);
-		return jobDetails;
-	}
+//	@PostMapping("/jobs/{jobId}/trigger")
+//	public @ResponseBody JobDetails triggerBuild(@RequestBody String buildParamsPayload) throws JsonParseException, JsonMappingException, IOException {
+//		Map<String,String> triggerJobPayload = mapper.readValue(buildParamsPayload, new TypeReference<HashMap<String,String>>(){});
+//		JobDetails jobDetails = integrationService.getJobDetails(triggerJobPayload.get("jobId"));
+//		integrationService.triggerBuild(jobDetails, triggerJobPayload);
+//		integrationService.storeJob(jobDetails);
+//		return jobDetails;
+//	}
 	
 	
 }
