@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PreDestroy;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,29 +28,18 @@ import net.schmizz.sshj.xfer.LocalSourceFile;
  * @author sahas.n
  *
  */
-//@Component
+@Component
 public class ScpStorageService implements StorageService {
 	
 	private SSHClient sshClient;
-	
-	private String baseFolder;
 	
 	private static final Logger LOGGER = LogManager.getLogger(ScpStorageService.class);
 
 	public SSHClient getSshClient() {
 		return sshClient;
 	}
-	
-	public String getBaseFolder() {
-		return baseFolder;
-	}
-	
-	//@Value("${storage.folder}")
-	public void setBaseFolder(String baseFolder) {
-		this.baseFolder = baseFolder;
-	}
 
-	//@Autowired
+	@Autowired
 	public void setSshClient(SSHClient sshClient) {
 		this.sshClient = sshClient;
 	}
@@ -59,19 +50,20 @@ public class ScpStorageService implements StorageService {
 		// TODO Auto-generated method stub
 		if(file!=null && file.exists()) {
 			LocalSourceFile sourceFile = new FileSystemFile(file);
-			String relFolder = pathDetails.get("relFolder");
-			String remotePath = this.baseFolder+pathDetails.get("relPath");
-			createRelFolderOnRemoteMachine(relFolder);
-			LOGGER.info("Uploading file to path :" + remotePath + " in remote machine");
-			this.sshClient.newSCPFileTransfer().upload(sourceFile, remotePath);
-			chmod(remotePath);
+			String folderPath = pathDetails.get("folderPath");
+			String filePath = pathDetails.get("fullPath");
+			createRelFolderOnRemoteMachine(folderPath);
+			LOGGER.info("Uploading file to path :" + filePath + " in remote machine");
+			this.sshClient.newSCPFileTransfer().upload(sourceFile, filePath);
+			chmod(filePath);
+//			file.delete();
 		}
 	}
 	
 	
-	public void createRelFolderOnRemoteMachine(String relFolder) throws ConnectionException, TransportException {
+	public void createRelFolderOnRemoteMachine(String folderPath) throws ConnectionException, TransportException {
 		Session session = this.sshClient.startSession();
-		Command cmd = session.exec("mkdir -m777 -p " + this.baseFolder + relFolder);
+		Command cmd = session.exec("mkdir -m777 -p " + folderPath);
 		cmd.join(5, TimeUnit.SECONDS);
 		session.close();
 	}
@@ -80,6 +72,11 @@ public class ScpStorageService implements StorageService {
 		Session session = this.sshClient.startSession();
 		session.exec("chmod 777 " + path);
 		session.close();
+	}
+	
+	@PreDestroy
+	public void closeClient() throws IOException {
+		this.sshClient.close();
 	}
 	/**
 	 * TODO: Change the filename to unique/random number so that no conflict exists.

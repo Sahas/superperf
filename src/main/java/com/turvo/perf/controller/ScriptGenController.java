@@ -37,5 +37,5 @@ public class ScriptGenController {
 		
 		integrationService.generateAndStoreJmxFile(jTestPlan);
 		
-	}
+	}	
 }

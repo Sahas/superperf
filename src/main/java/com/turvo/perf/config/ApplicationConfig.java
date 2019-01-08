@@ -2,15 +2,26 @@ package com.turvo.perf.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.offbytwo.jenkins.JenkinsServer;
+import com.offbytwo.jenkins.client.JenkinsHttpConnection;
+import com.offbytwo.jenkins.model.BaseModel;
+import com.offbytwo.jenkins.model.Job;
 import com.turvo.perf.core.LocalStorageService;
 import com.turvo.perf.core.ScpStorageService;
 import com.turvo.perf.core.StorageService;
@@ -28,9 +39,18 @@ public class ApplicationConfig {
 	public JenkinsServer jenkinsServer(@Value("${jenkins.url}") String url, @Value("${jenkins.userId}") String userName,
 			@Value("${jenkins.password}") String password, @Value("${jenkins.apiToken}") String apiToken)
 			throws URISyntaxException {
-
 		return new JenkinsServer(new URI(url), userName, password);
 
+	}
+	
+	@Bean
+	public Map<String, Job> availableJobs(@Value("${jenkins.jobs}") List<String> jobNames, JenkinsServer jenkinsServer) throws IOException{
+		Map<String,Job> jobsMap =  jenkinsServer.getJobs().entrySet().stream()
+				.filter(entry -> jobNames.contains(entry.getKey()))
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+		
+		return jobsMap;
+		
 	}
 	
 	
@@ -64,7 +84,6 @@ public class ApplicationConfig {
 			return storageService;
 		}else {
 			ScpStorageService storageService = new ScpStorageService();
-			storageService.setBaseFolder(baseFolder);
 			storageService.setSshClient(sshClient);
 			return storageService;
 		}
